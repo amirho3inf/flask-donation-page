@@ -15,3 +15,7 @@ migrate = Migrate(app, db)
 
 import_module('views')
 import_module('models')
+
+
+if __name__ == '__main__':
+    app.run()
