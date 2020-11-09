@@ -21,7 +21,8 @@ def make_payment():
         if phone_number:
             if not phone_number.isnumeric():
                 raise ValueError("Invalid phone number")
-            phone_number = int(phone_number)  # persian nums to english nums
+
+            phone_number = f'0{int(phone_number)}'  # convert to english digits
             if not re.match(r'^09\d{9}$', str(phone_number)):
                 raise ValueError("Invalid phone number")
 
