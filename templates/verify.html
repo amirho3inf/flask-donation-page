@@ -15,13 +15,18 @@
   {% endif %}'>
   <div class="col-md-5-center payment-result">
     {% if verified and not again %}
-    پرداخت انجام شد.<br>
+    پرداخت انجام شد.
+    <br>
     کد رهگیری: {{ pay_trace }}
     {% elif verified and again %}
     این پرداخت قبلا انجام شده است.
     {% else %}
     پرداخت انجام نشد.
     {% endif %}
+    <br><br>
+    <a href="/" style="font-size: 18px;"><button class="{% if again %} btn-green {% else %} btn-blue {% endif %}">
+        بازگشت
+      </button></a>
   </div>
 
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
