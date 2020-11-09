@@ -85,6 +85,15 @@ def verify_payment():
             db.session.rollback()  # ensure database session works after error
             raise e
 
-        return render_template('verify.html', verified=True, pay_trace=payment_data['pay_trace'])
+        amount = int(payment.amount / 10)  # rial to toman
+        date, _time = payment_data['pay_time'].split("T")
+        pay_time = f'{_time.split(".", 1)[0]} ({date})'
+
+        return render_template('verify.html',
+                               verified=True,
+                               pay_trace=payment_data['pay_trace'],
+                               amount=amount,
+                               pay_pan=payment_data['pay_pan'],
+                               pay_time=pay_time)
 
     return render_template('verify.html', verified=False)
