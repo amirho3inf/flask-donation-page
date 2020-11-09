@@ -1,3 +1,4 @@
+import re
 import traceback
 from models import Payment
 from app import app, webpay, db
@@ -16,19 +17,29 @@ def make_payment():
         if amount < 10000:
             raise ValueError("Amount is too less")
 
+        phone_number = request.form.get('phone')
+        if phone_number:
+            if not phone_number.isnumeric():
+                raise ValueError("Invalid phone number")
+            phone_number = int(phone_number)  # persian nums to english nums
+            if not re.match(r'^09\d{9}$', str(phone_number)):
+                raise ValueError("Invalid phone number")
+
         # record payment data in database
         payment = Payment()
         payment.name = request.form.get('name')
         payment.email = request.form.get('email')
         payment.description = request.form.get('description')
         payment.amount = amount
+        payment.phone_number = phone_number
         db.session.add(payment)
         db.session.commit()
 
         payment_url = webpay.payment(
             reference=payment.id,  # unique ID
             amount_irr=amount,
-            callback_url=url_for('verify_payment', _external=True)
+            callback_url=url_for('verify_payment', _external=True),
+            payer_mobile=phone_number
         )
         return redirect(payment_url)
     except Exception:
@@ -37,7 +48,7 @@ def make_payment():
         return redirect(url_for('donation_page'))
 
 
-@app.route('/verify_payment', methods=['GET'])
+@ app.route('/verify_payment', methods=['GET'])
 def verify_payment():
     reference = request.args.get('reference')
     if not reference:

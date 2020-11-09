@@ -10,6 +10,7 @@ class Payment(db.Model):
                    default=lambda: str(uuid.uuid4()))
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(256), nullable=True)
+    phone_number = db.Column(db.String(12), nullable=True)
     description = db.Column(db.String(2048), nullable=True)
     amount = db.Column(db.Integer(), nullable=False)
     paid = db.Column(db.Boolean(), nullable=False, default=False)
