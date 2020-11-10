@@ -2,7 +2,7 @@ import re
 import traceback
 from models import Payment
 from app import app, webpay, db
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 
 
 @app.route('/', methods=['GET'])
@@ -15,16 +15,16 @@ def make_payment():
     try:
         amount = int(request.form.get('amount')) * 10  # toman to rial
         if amount < 10000:
-            raise ValueError("Amount is too less")
+            raise ValueError("حداقل مبلغ مجاز برای پرداخت ۱۰۰۰ تومان است.")
 
         phone_number = request.form.get('phone')
         if phone_number:
             if not phone_number.isnumeric():
-                raise ValueError("Invalid phone number")
+                raise ValueError("شماره تماس وارد شده نامعتبر است.")
 
             phone_number = f'0{int(phone_number)}'  # convert to english digits
             if not re.match(r'^09\d{9}$', str(phone_number)):
-                raise ValueError("Invalid phone number")
+                raise ValueError("شماره تماس وارد شده نامعتبر است.")
 
         # record payment data in database
         payment = Payment()
@@ -43,6 +43,9 @@ def make_payment():
             payer_mobile=phone_number
         )
         return redirect(payment_url)
+    except ValueError as e:
+        flash(str(e))
+        return redirect(url_for('donation_page'))
     except Exception:
         db.session.rollback()  # ensure database session works after error
         traceback.print_exc()  # print traceback and continue
