@@ -1,4 +1,4 @@
-# An simple donation website using [Flask](https://github.com/pallets/flask/) and [Webpay](https://github.com/amirho3inf/python-webpay/)
+# A simple donation website using [Flask](https://github.com/pallets/flask/) and [Webpay](https://github.com/amirho3inf/python-webpay/)
 
 ### Screenshots
 |1|2|
